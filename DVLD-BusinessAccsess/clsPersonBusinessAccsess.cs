@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using DVLD_DataAccsess;
+using DVLD_BusinessAccsess;
 namespace DVLD_BusinessAccsess
 {
     public class clsPersonBusinessAccsess
@@ -16,13 +17,26 @@ namespace DVLD_BusinessAccsess
         public string SecondName { get; set; }
         public string ThirdName { get; set; }
         public string LastName { get; set; }
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + SecondName + " " + ThirdName + " " + LastName;
+            }
+        }
         public DateTime DateOfBirth { get; set; }
         public int Gendor { get; set; }
         public string Address{  get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public int NationalityCountryID { get; set; }
-        public string ImagePath { get; set; }
+        public Country countryinfo;
+        private string _ImagePath;
+        public string ImagePath
+        {
+            get { return _ImagePath; }
+            set { _ImagePath = value; }
+        }
         public int PersonID { get; set; }
 
       public  clsPersonBusinessAccsess()
@@ -32,7 +46,7 @@ namespace DVLD_BusinessAccsess
             this.SecondName = "";
             this.ThirdName = "";
             this.LastName = "";
-            this.DateOfBirth = DateTime.MinValue;
+            this.DateOfBirth = DateTime.Now;
             this.Gendor = -1;
             this.Address = "";
             this.Phone = "";
@@ -58,6 +72,7 @@ namespace DVLD_BusinessAccsess
             this.Phone = phone;
             this.Email = email;
             this.NationalityCountryID = nationalityCountryID;
+            this.countryinfo=Country.Find(nationalityCountryID);
             this.ImagePath = imagePath;
             this.PersonID = personID;
             Mode = enMode.Update;
@@ -67,16 +82,16 @@ namespace DVLD_BusinessAccsess
         {
             return clsPersonDataAccsess.GetAllPersons();
         }
-        public static clsPersonBusinessAccsess Find(int ID)
+        public static clsPersonBusinessAccsess Find(int PersonID)
         {
             string NationalNo = "", FirstName = "", SecondName = "", ThirdName = "", LastName = "", Address = "", Phone = "", Email = "", ImagePath = "";
-            int Gendor = 0, NationalityCountryID = 0;
-            DateTime DateOfBirth = DateTime.MinValue;
+            int Gendor = 0, NationalityCountryID = -1;
+            DateTime DateOfBirth = DateTime.Now;
 
-            if(clsPersonDataAccsess.GetPersonInfoByID(ID,ref NationalNo,ref FirstName,ref SecondName,ref ThirdName,
+            if(clsPersonDataAccsess.GetPersonInfoByID(PersonID, ref NationalNo,ref FirstName,ref SecondName,ref ThirdName,
                 ref LastName,ref DateOfBirth,ref Gendor,ref Address,ref Phone,ref Email,ref NationalityCountryID,ref ImagePath))
             {
-                return new clsPersonBusinessAccsess(ID, NationalNo, FirstName, SecondName, ThirdName,
+                return new clsPersonBusinessAccsess(PersonID, NationalNo, FirstName, SecondName, ThirdName,
                 LastName, DateOfBirth, Gendor, Address, Phone, Email, NationalityCountryID, ImagePath);
             }
             else
@@ -84,7 +99,25 @@ namespace DVLD_BusinessAccsess
 
         }
 
-        public  bool AddNewPerson()
+        public static clsPersonBusinessAccsess Find(string NationalNo)
+        {
+            int PersonID = -1;
+            string FirstName = "", SecondName = "", ThirdName = "", LastName = "", Address = "", Phone = "", Email = "", ImagePath = "";
+            int Gendor = 0, NationalityCountryID = -1;
+            DateTime DateOfBirth = DateTime.Now;
+
+            if (clsPersonDataAccsess.GetPersonInfoByNationalNo(NationalNo, ref PersonID, ref FirstName, ref SecondName, ref ThirdName,
+                ref LastName, ref DateOfBirth, ref Gendor, ref Address, ref Phone, ref Email, ref NationalityCountryID, ref ImagePath))
+            {
+                return new clsPersonBusinessAccsess(PersonID, NationalNo, FirstName, SecondName, ThirdName,
+                LastName, DateOfBirth, Gendor, Address, Phone, Email, NationalityCountryID, ImagePath);
+            }
+            else
+                return null;
+        }
+
+
+        public bool AddNewPerson()
         {
             this.PersonID = clsPersonDataAccsess.AddNewPerson(this.NationalNo, this.FirstName, this.SecondName, this.ThirdName,
                 this.LastName, this.DateOfBirth, this.Gendor, this.Address, this.Phone, this.Email, this.NationalityCountryID, this.ImagePath);
@@ -96,19 +129,22 @@ namespace DVLD_BusinessAccsess
             return clsPersonDataAccsess.UpdataPerson(this.PersonID, this.NationalNo, this.FirstName, this.SecondName, this.ThirdName,
                 this.LastName, this.DateOfBirth, this.Gendor, this.Address, this.Phone, this.Email, this.NationalityCountryID, this.ImagePath);
         }
-        public static bool DeletePerson(int ID)
+        public static bool DeletePerson(int PersonID)
         {
-            return clsPersonDataAccsess.DeletePerson(ID);
+            return clsPersonDataAccsess.DeletePerson(PersonID);
         }
 
-        public bool IsPersonExist(int ID)
+        public bool IsPersonExist(int PersonID)
         {
-            return clsPersonDataAccsess.IsPersonExist(ID);
+            return clsPersonDataAccsess.IsPersonExist(PersonID);
+        }
+        public static bool IsPersonExist(string NationalNo)
+        {
+            return clsPersonDataAccsess.IsPersonExist(NationalNo);
         }
         public bool Save()
         {
-            Console.WriteLine(Mode);
-
+          
             switch (Mode)
             {
                 case enMode.AddNew:
@@ -142,7 +178,7 @@ namespace DVLD_BusinessAccsess
 
         public static DataTable FillAllCountriesInCb()
         {
-            return clsPersonDataAccsess.GetAllCountries();
+            return Country.GetAllCountries();
         }
 
     }

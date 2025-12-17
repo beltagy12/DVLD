@@ -69,6 +69,7 @@ namespace DVLD_Presentation
         private void txtValue_TextChanged(object sender, EventArgs e)
         {
             _Filter();
+
         }
 
         private void cbfilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -121,8 +122,58 @@ namespace DVLD_Presentation
 
                 else
                     MessageBox.Show("Contact is not deleted.");
+                MessageBox.Show(dgvAllPeople.CurrentRow.Cells[0].Value.ToString());
+
 
             }
+
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmPersonDetails frm = new frmPersonDetails((int)dgvAllPeople.CurrentRow.Cells[0].Value);
+            frm.ShowDialog();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            _RefreachPersonsList();
+
+        }
+
+        private void txtValue_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (cbfilter.SelectedItem == null)
+                return;
+
+            string selectedFilter = cbfilter.SelectedItem.ToString();
+
+            if (selectedFilter == "PersonID" ||
+                selectedFilter == "Gendor" ||
+                selectedFilter == "NationalityCountryID")
+            {
+                // السماح بالأرقام + Backspace فقط
+                if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+                {
+                    e.Handled = true;
+                }
+            }
+
+        }
+
+        private void sendEmailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This feature is under development.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void callToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This feature is under development.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
     }

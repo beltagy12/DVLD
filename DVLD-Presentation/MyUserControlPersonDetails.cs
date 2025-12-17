@@ -12,9 +12,24 @@ namespace DVLD_Presentation
 {
     public partial class MyUserControlPersonDetails : UserControl
     {
-        public MyUserControlPersonDetails()
+        private int _personID;
+
+        public MyUserControlPersonDetails(int personID)
         {
             InitializeComponent();
+            _personID = personID;
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+            AddEditPersonInfo frm = new AddEditPersonInfo(_personID);
+            frm.ShowDialog();
+        }
+
+        private void picPersonDetails_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
