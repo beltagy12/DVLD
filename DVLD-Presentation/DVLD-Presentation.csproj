@@ -64,6 +64,12 @@
     <Compile Include="frmPersonDetails.Designer.cs">
       <DependentUpon>frmPersonDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="loginfrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="loginfrm.Designer.cs">
+      <DependentUpon>loginfrm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Manage People.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmPersonDetails.resx">
       <DependentUpon>frmPersonDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="loginfrm.resx">
+      <DependentUpon>loginfrm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Manage People.resx">
       <DependentUpon>Manage People.cs</DependentUpon>
@@ -205,6 +214,36 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Call.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Application.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Driver.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Account setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\photo_5929212613264870492_y.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\photo_5929212613264870493_y.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\photo_5929212613264870494_y.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\photo_5974206467319467095_y.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\photo_5974206467319467095_y1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Changepassword.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Signout.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
