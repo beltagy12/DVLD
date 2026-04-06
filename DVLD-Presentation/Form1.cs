@@ -38,5 +38,10 @@ namespace DVLD_Presentation
             frmManage_People frm = new frmManage_People();
             frm.ShowDialog();
         }
+
+        private void signOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
