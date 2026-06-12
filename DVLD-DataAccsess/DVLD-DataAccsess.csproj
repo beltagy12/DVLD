@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationType.cs" />
     <Compile Include="clsDataAccessSettings.cs" />
     <Compile Include="clsPersonDataAccsess.cs" />
+    <Compile Include="clsTestTypeData.cs" />
     <Compile Include="CountryData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

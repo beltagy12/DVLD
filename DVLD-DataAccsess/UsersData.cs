@@ -12,24 +12,38 @@ namespace DVLD_DataAccsess
     {
         public static DataTable GetAllUsers()
         {
+
             DataTable dt = new DataTable();
-            SqlConnection connection=new SqlConnection(clsDataAccessSettings.ConnectionString);
-            string query = "SELECT * FROM Users;";
-            SqlCommand cmd =new SqlCommand(query, connection);
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = @"SELECT  Users.UserID, Users.PersonID,
+                            FullName = People.FirstName + ' ' + People.SecondName + ' ' + ISNULL( People.ThirdName,'') +' ' + People.LastName,
+                             Users.UserName, Users.IsActive
+                             FROM  Users INNER JOIN
+                                    People ON Users.PersonID = People.PersonID";
+
+            SqlCommand command = new SqlCommand(query, connection);
 
             try
             {
                 connection.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+
                 {
                     dt.Load(reader);
                 }
+
                 reader.Close();
+
+
             }
+
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                // Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -37,6 +51,7 @@ namespace DVLD_DataAccsess
             }
 
             return dt;
+
         }
 
         public static bool GetUserInfoByUserID(int UserID, ref int PersonID, ref string UserName,
@@ -203,48 +218,91 @@ namespace DVLD_DataAccsess
             return isFound;
         }
 
-        public static bool UpdateUser(int UserID,int PersonID,string UserName,string Password, int IsActive)
+        //public static bool UpdateUser(int UserID,int PersonID,string UserName,string Password, bool IsActive)
+        //{
+        //    int RowsAfficted = 0;
+        //    SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+        //    string query = @"UPDATE Users
+        //    set PersonID=@PersonID ,
+        //    UserName=@UserName,
+        //    Password=@Password
+        //    IsActive=@IsActive
+        //    where UserID=@UserID;";
+        //    SqlCommand cmd = new SqlCommand(query, connection);
+        //    cmd.Parameters.AddWithValue("@UserID", UserID);
+        //    cmd.Parameters.AddWithValue("@PersonID", PersonID);
+        //    cmd.Parameters.AddWithValue("@UserName", UserName);
+        //    cmd.Parameters.AddWithValue("@Password", Password);
+        //    cmd.Parameters.AddWithValue("@IsActive", IsActive);
+        //    try
+        //    {
+        //        connection.Open();
+        //       RowsAfficted=cmd.ExecuteNonQuery();
+
+                
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        connection.Close();
+        //    }
+        //    return (RowsAfficted > 0);
+        //}
+
+
+        public static bool UpdateUser(int UserID, int PersonID, string UserName,
+             string Password, bool IsActive)
         {
-            int RowsAfficted = 0;
+
+            int rowsAffected = 0;
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-            string query = @"UPDATE Users
-            set PersonID=@PersonID ,
-            UserName=@UserName,
-            Password=@Password
-            IsActive=@IsActive
-            where UserID=@UserID;";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@PersonID", PersonID);
-            cmd.Parameters.AddWithValue("@UserName", UserName);
-            cmd.Parameters.AddWithValue("@Password", Password);
-            cmd.Parameters.AddWithValue("@IsActive", IsActive);
+
+            string query = @"Update  Users  
+                            set PersonID = @PersonID,
+                                UserName = @UserName,
+                                Password = @Password,
+                                IsActive = @IsActive
+                                where UserID = @UserID";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@PersonID", PersonID);
+            command.Parameters.AddWithValue("@UserName", UserName);
+            command.Parameters.AddWithValue("@Password", Password);
+            command.Parameters.AddWithValue("@IsActive", IsActive);
+            command.Parameters.AddWithValue("@UserID", UserID);
+
+
             try
             {
                 connection.Open();
-               RowsAfficted=cmd.ExecuteNonQuery();
+                rowsAffected = command.ExecuteNonQuery();
 
-                
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine("Error: " + ex.Message);
+                return false;
             }
+
             finally
             {
                 connection.Close();
             }
-            return (RowsAfficted > 0);
-        }
 
-         public static int AddNewUser(int PersonID, string UserName, string Password, int IsActive)
+            return (rowsAffected > 0);
+        }
+        public static int AddNewUser(int PersonID, string UserName, string Password, bool IsActive)
         {
             int UserID = -1;
 
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-            string query = @"insert into Users (PersonID,UserName ,Password, IsActive)
-            value(@PersonID,@UserName ,@Password, @IsActive))
-            SELECT SCOPE_IDENTITY();";
+            string query = @"INSERT INTO Users (PersonID,UserName,Password,IsActive)
+                             VALUES (@PersonID, @UserName,@Password,@IsActive);
+                             SELECT SCOPE_IDENTITY();";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@PersonID", PersonID);
             cmd.Parameters.AddWithValue("@UserName", UserName);
@@ -276,7 +334,9 @@ namespace DVLD_DataAccsess
         {
             int RowAfficted = 0;
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-            string query = "Delete * from Users Where UserID=@UserID;";
+
+            string query = @"Delete Users 
+                                where UserID = @UserID";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@UserID", UserID);
 
